@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#10dcf2">
+    <TableLayout
+        android:id="@+id/activity_login_page"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="80dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:weightSum="1"
+        tools:context="com.cse535.jerry.project_final.login_page">
+        <TableRow android:layout_width="match_parent"
+            android:layout_height="match_parent"></TableRow>
+        <TableRow></TableRow>
+        <TableRow></TableRow>
+        <TableRow>
+            <TextView
+                android:text="Account:"
+                android:layout_height="39dp"
+                android:id="@+id/textView_1"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:textSize="18sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textColor="@android:color/black"
+                android:padding="10dp" />
+
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:id="@+id/name_1"
+                android:textIsSelectable="false"
+                android:hint="@string/type_account_1"
+                android:textColor="#ffffff"
+                android:textSize="18sp"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:text="Password:"
+                android:textColor="@android:color/black"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:textSize="18sp"
+                android:id="@+id/textView2_1"
+                android:padding="10dp"
+                android:layout_weight="1"/>
+            <EditText
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:id="@+id/pwd_1"
+                android:textIsSelectable="false"
+                android:hint="@string/type_pwd_1"
+                android:text=""
+                android:textColor="#f2efef"
+                android:textSize="18sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:onClick="registerEvent"
+                android:text="Register"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:id="@+id/register_btn_1" />
+
+            <Button
+                android:id="@+id/login_btn_1"
+                android:text="Login"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+
+
+            </Button>
+        </TableRow>
+        <TableRow>
+
+        </TableRow>
+
+
+    </TableLayout>
+</LinearLayout>
+

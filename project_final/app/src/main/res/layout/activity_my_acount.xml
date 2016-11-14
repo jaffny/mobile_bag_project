@@ -1,0 +1,113 @@
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_my_acount"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.cse535.jerry.project_final.MyAcountActivity">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:weightSum="1">
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="20dp"
+                android:textSize="18sp"
+                android:id="@+id/name"
+                android:text="Name"
+                />
+
+            <TextView
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:id="@+id/account_name"
+                android:textIsSelectable="false"
+                android:text="AccountName"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                 />
+        </TableRow>
+        <TableRow
+            android:layout_marginTop="40dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="30dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/my_bag"
+                android:text="My Bag" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="30dp"
+                android:layout_marginTop="40dp"
+                android:layout_below="@+id/my_bag"
+                android:layout_centerHorizontal="true"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:id="@+id/rental_hist"
+                android:text="Rental History" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+            <Button
+                android:text="Publish Request"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:id="@+id/pub_req"
+                android:layout_marginTop="40dp"
+                android:backgroundTint="@color/lightBlue"
+                android:textAllCaps="false"
+                android:textColor="#ffff"
+                android:textSize="20sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+            <Button
+                android:text="Publish Bag"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+                android:layout_height="wrap_content"
+                android:id="@+id/pub_bag"
+                android:layout_marginTop="40dp"
+                android:backgroundTint="@color/lightBlue"
+                android:textAllCaps="false"
+                android:textColor="#ffff"
+                android:textSize="20sp"/>
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+        </TableRow>
+    </TableLayout>
+
+
+
+
+
+</RelativeLayout>

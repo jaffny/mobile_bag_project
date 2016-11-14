@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+
+    android:id="@+id/rowLayout">
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_height="160dp"
+        android:background="@drawable/frame"
+        android:id="@+id/picbag_7" />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="Title:"
+        android:id="@+id/title_7"
+        android:layout_below="@+id/picbag_7"
+        android:layout_alignLeft="@+id/picbag_7"
+        android:layout_alignStart="@+id/picbag_7"
+        android:layout_marginLeft="12dp"
+
+        android:textSize="18dp"/>
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="Bag Name"
+        android:id="@+id/title_name"
+        android:layout_below="@+id/picbag_7"
+        android:layout_alignLeft="@+id/picbag_7"
+        android:layout_alignStart="@+id/picbag_7"
+        android:layout_marginLeft="62dp"
+
+        android:textSize="18dp"
+        android:textColor="#000"/>
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="Time:"
+        android:id="@+id/time_7"
+        android:layout_below="@+id/title_7"
+        android:layout_alignLeft="@+id/title_7"
+        android:layout_alignStart="@+id/title_7"
+        android:textSize="18dp"/>
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="Lease Time"
+        android:id="@+id/lease_time"
+        android:layout_below="@+id/title_name"
+        android:layout_alignLeft="@+id/time_7"
+        android:layout_alignStart="@+id/time_7"
+        android:layout_marginLeft="50dp"
+        android:textSize="18dp"
+        android:textColor="#000"/>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:id="@+id/lease_btn"
+        android:text="lease"
+        android:textSize="19dp"
+        android:textColor="#FFF"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/buttonshape"
+        android:layout_below="@+id/lease_time"
+        android:layout_toRightOf="@+id/lease_time"
+        android:layout_toEndOf="@+id/lease_time" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:id="@+id/review_btn"
+        android:text="review"
+        android:textSize="19dp"
+        android:textColor="#FFF"
+        android:background="@drawable/buttonshape"
+        android:layout_below="@+id/time_7"
+        android:layout_alignLeft="@+id/picbag_7"
+        android:layout_alignStart="@+id/picbag_7" />
+
+</RelativeLayout>
