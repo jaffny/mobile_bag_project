@@ -42,6 +42,7 @@
                 android:id="@+id/name_1"
                 android:textIsSelectable="false"
                 android:hint="@string/type_account_1"
+                android:text="Jerry"
                 android:textColor="#ffffff"
                 android:textSize="18sp"
                 />
@@ -65,7 +66,7 @@
                 android:id="@+id/pwd_1"
                 android:textIsSelectable="false"
                 android:hint="@string/type_pwd_1"
-                android:text=""
+                android:text="12230"
                 android:textColor="#f2efef"
                 android:textSize="18sp" />
         </TableRow>

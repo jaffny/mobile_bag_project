@@ -185,7 +185,7 @@ public class GPSTracker extends Service implements LocationListener {
             if (addressList != null && addressList.size() > 0) {
                 Address address = addressList.get(0);
                 StringBuilder sb = new StringBuilder();
-                sb.append(address.getLocality()).append("\n");
+                sb.append(address.getLocality()).append(",");
                 sb.append(address.getPostalCode());
                 result = sb.toString();
             }

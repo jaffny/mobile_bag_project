@@ -32,7 +32,7 @@
                 android:layout_weight="2"
                 android:id="@+id/account_name"
                 android:textIsSelectable="false"
-                android:text="AccountName"
+                android:text=""
                 android:textColor="#000000"
                 android:textSize="18sp"
                  />

@@ -89,7 +89,7 @@ public class Bag {
 
     public void bitmap2bytes(Bitmap bitmap){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         this.byteArray = stream.toByteArray();
     }
 

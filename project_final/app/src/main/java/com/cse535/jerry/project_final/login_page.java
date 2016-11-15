@@ -1,6 +1,8 @@
 package com.cse535.jerry.project_final;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +16,7 @@ public class login_page extends AppCompatActivity {
     private String account;
     private String password;
     private String local;
+    private int choose = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,18 +26,13 @@ public class login_page extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 getCurLogin();
-//                JSONObject login_json = goWCF.login(account, password, local);
-//                try {
-//                    boolean msg = (boolean) login_json.get("_loginSuc");
-//                    if(msg == true){
-                        Intent intent = new Intent(login_page.this, MyAcountActivity.class);
-                        startActivity(intent);
-//                    }else{
-//                        Toast.makeText(login_page.this, "login info are wrong", Toast.LENGTH_LONG);
-//                    }
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                if(account.length() == 0 || password.length() == 0){
+                    Toast.makeText(login_page.this,"login Error", Toast.LENGTH_LONG ).show();
+                }else{
+                    choose = 0;
+                    AsyncLogin task = new AsyncLogin();
+                    task.execute();
+                }
 
             }
         });
@@ -45,47 +43,76 @@ public class login_page extends AppCompatActivity {
         TextView pwdView = (EditText)findViewById(R.id.pwd_1);
         account = accountView.getText().toString();
         password = pwdView.getText().toString();
-        local = "Tempe";
+        local = curlocal();
     }
 
     public void registerEvent(View view){
-//        getCurLogin();
-//        if(account.length() == 0 || password.length() == 0){
-//            Toast.makeText(login_page.this,"register Error", Toast.LENGTH_LONG ).show();
-//        }else{
-//            boolean rej = goWCF.rejester(account, password, local);
-//            if( rej == false ) {
-//                Toast.makeText(login_page.this, "account already existed", Toast.LENGTH_LONG).show();
-//            }else{
-//                Toast.makeText(login_page.this,"register Success", Toast.LENGTH_LONG ).show();
-//            }
-//        }
-//        test GPS
-        GPSTracker  gps = new GPSTracker(this);
-
-        // check if GPS enabled
-        if(gps.canGetLocation()){
-
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            String addr = gps.getAddress();
-            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude, Toast.LENGTH_LONG).show();
-            if (addr != null){
-                Log.d("local", addr);
-            }else{
-                Log.d("local", "error Local   error Local error Local error Local");
-            }
-
-            // \n is for new line
-//            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude +"\nAddr:"+ addr, Toast.LENGTH_LONG).show();
+        getCurLogin();
+        if(account.length() == 0 || password.length() == 0){
+            Toast.makeText(login_page.this,"register Error", Toast.LENGTH_LONG ).show();
         }else{
-            // can't get location
-            // GPS or Network is not enabled
-            // Ask user to enable GPS/network in settings
-            gps.showSettingsAlert();
+            choose = 1;
+            AsyncLogin task = new AsyncLogin();
+            task.execute();
         }
     }
 
+    protected void onPause(){
+        super.onPause();
+        SharedPreferences user = getSharedPreferences("user", 0);
+        SharedPreferences.Editor PE = user.edit();
+        PE.putString("name",account);
+        PE.putString("local", local);
+        PE.commit();
+    }
+
+    private String curlocal(){
+        GPSTracker  gps = new GPSTracker(this);
+        String addr = null;
+        if(gps.canGetLocation()){
+//            double latitude = gps.getLatitude();
+//            double longitude = gps.getLongitude();
+            addr = gps.getAddress();
+//            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude +"\nlocality:" + addr, Toast.LENGTH_LONG).show();
+        }else{
+            gps.showSettingsAlert();
+        }
+        return addr;
+    }
+
+    private class AsyncLogin extends AsyncTask<String, Void, Integer>{
+        Boolean res;
+
+        @Override
+        protected Integer doInBackground(String... params) {
+            if(choose == 1){
+                res = goWCF.register(account, password, local);
+            }else{
+                res = goWCF.login(account, password, local);
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Integer result){
+            if(choose == 1){
+                if( res == false ) {
+                    Toast.makeText(login_page.this, "account already existed", Toast.LENGTH_LONG).show();
+                }else{
+                    Toast.makeText(login_page.this,"register Success", Toast.LENGTH_LONG ).show();
+                }
+            }else{
+                if(res == true){
+                    Intent intent = new Intent(login_page.this, MyAcountActivity.class);
+                    onPause();
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(login_page.this, "login info are wrong", Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+
+    }
 
 
 }
