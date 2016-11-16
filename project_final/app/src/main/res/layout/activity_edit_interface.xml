@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_publish_interface"
+    android:id="@+id/activity_edit_interface"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cse535.jerry.project_final.Publish_interface"
-    android:background="@color/lightBlue">
+    android:background="#2df9ae"
+    tools:context="com.cse535.jerry.project_final.Edit_interface">
 
     <ImageView
         android:layout_width="300dp"
@@ -98,40 +97,5 @@
         android:textColor="#0b0404"
         android:text="hi hi this is a good bag!!!"
         android:background="@drawable/frame"/>
-
-    <Button
-        android:text="Submit"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_alignBottom="@+id/price_6"
-        android:layout_alignRight="@+id/image_6"
-        android:layout_alignEnd="@+id/image_6"
-        android:id="@+id/sub_btn_6"
-        android:textColor="#fff"
-        android:background="@drawable/round_btn_2"
-        android:onClick="submitEvent"/>
-
-    <!--<Button-->
-        <!--android:text="From Album"-->
-        <!--android:layout_width="70dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:id="@+id/album_6"-->
-        <!--android:textAllCaps="false"-->
-        <!--android:textSize="13dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:layout_alignLeft="@+id/image_6"-->
-        <!--android:layout_alignStart="@+id/image_6"-->
-        <!--android:onClick="FromAlbum"/>-->
-
-    <!--<Button-->
-        <!--android:text="PhotoTaken"-->
-        <!--android:layout_width="100dp"-->
-        <!--android:layout_height="50dp"-->
-        <!--android:layout_marginLeft="35dp"-->
-        <!--android:id="@+id/camera_6"-->
-        <!--android:textAllCaps="false"-->
-        <!--android:textSize="13dp"-->
-        <!--android:layout_alignParentTop="true"-->
-        <!--android:onClick="PhotoTaken"/>-->
 
 </RelativeLayout>

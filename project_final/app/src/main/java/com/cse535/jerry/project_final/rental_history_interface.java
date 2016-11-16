@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -49,6 +50,14 @@ public class rental_history_interface extends AppCompatActivity {
     }
     public void setRow(Drawable img, String title, Calendar cur, Calendar lease) {
         //Inflater service
+//        testing
+        int[] imgID = {
+                R.drawable.bag0,
+                R.drawable.bag1,
+                R.drawable.bag2,
+                R.drawable.bag3,
+                R.drawable.bag4,
+        };
         for(int i=0; i< 5; i++){
             LayoutInflater layoutInfralte=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TableLayout tableLayout = (TableLayout) findViewById(R.id.table_lay_7);
@@ -57,6 +66,8 @@ public class rental_history_interface extends AppCompatActivity {
             view = layoutInfralte.inflate(R.layout.content_row_rental_history, null);
             TextView Title = (TextView)view.findViewById(R.id.title_name);
             String bag = "my bag" + Integer.toString(i);
+            ImageView imgView = (ImageView)view.findViewById(R.id.picbag_7);
+            imgView.setImageResource(imgID[i]);
             Title.setText(bag);
             TextView LeaseTime = (TextView)view.findViewById(R.id.lease_time);
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -100,27 +111,27 @@ public class rental_history_interface extends AppCompatActivity {
         });
     }
 
-//    public void PhotoTaken(){
-//        Config config = new Config();
-//        config.setCameraHeight(R.dimen.camera_height);
-//        config.setToolbarTitleRes(R.string.toolbar_title);
-//        config.setSelectionMin(1);
-//        config.setSelectionLimit(1);
-//        ImagePickerActivity.setConfig(config);
-//        Intent intent  = new Intent(rental_history_interface.this, ImagePickerActivity.class);
-//        startActivityForResult(intent,REQUEST_CODE_CAPTURE);
-//    }
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (requestCode == REQUEST_CODE_CAPTURE && resultCode==RESULT_OK) {
-//            ArrayList<Uri> image_uris = data.getParcelableArrayListExtra(ImagePickerActivity.EXTRA_IMAGE_URIS);
-//            for(Uri uri : image_uris){
-//                imgView.setImageURI(uri);
+    private class AsyncBagHist extends AsyncTask<Void, Void, Void> {
+        Boolean res;
+        @Override
+        protected Void doInBackground(Void... params) {
+            String method;
+//            res = goWCF.publish(method, name, pic, title, price, description, location);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result){
+//            if( res == true){
+//                Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
+//            }else{
+//                Toast.makeText(Publish_interface.this, "publish fail", Toast.LENGTH_LONG).show();
 //            }
-//        }
-//    }
+//            Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
+
+        }
+
+    }
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.

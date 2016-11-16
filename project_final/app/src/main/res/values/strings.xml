@@ -2,4 +2,5 @@
     <string name="app_name">project_final</string>
     <string name="type_account_1">account name</string>
     <string name="type_pwd_1">password</string>
+    <string name="title_activity_edit_interface">Edit_interface</string>
 </resources>
