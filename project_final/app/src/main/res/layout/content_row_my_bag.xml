@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:layout_centerHorizontal="true"
+    android:id="@+id/rowLayout">
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_height="160dp"
+        android:background="@drawable/frame"
+        android:id="@+id/picbag_8" />
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="Title:"
+        android:id="@+id/title_8"
+        android:layout_below="@+id/picbag_8"
+        android:layout_alignLeft="@+id/picbag_8"
+        android:layout_alignStart="@+id/picbag_8"
+        android:layout_marginLeft="12dp"
+
+        android:textSize="18dp"/>
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="Bag Name"
+        android:id="@+id/title_name_8"
+        android:layout_below="@+id/picbag_8"
+        android:layout_alignLeft="@+id/picbag_8"
+        android:layout_alignStart="@+id/picbag_8"
+        android:layout_marginLeft="62dp"
+
+        android:textSize="18dp"
+        android:textColor="#000"/>
+
+    <TextView
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        android:text="Price:"
+        android:id="@+id/price_8"
+        android:layout_below="@+id/title_8"
+        android:layout_alignLeft="@+id/title_8"
+        android:layout_alignStart="@+id/title_8"
+        android:textSize="18dp"/>
+    <TextView
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="prices"
+        android:id="@+id/price_val_8"
+        android:layout_below="@+id/title_name_8"
+        android:layout_alignLeft="@+id/price_8"
+        android:layout_alignStart="@+id/price_8"
+        android:layout_marginLeft="50dp"
+        android:textSize="18dp"
+        android:textColor="#000"/>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:id="@+id/delete_btn"
+        android:text="delete"
+        android:textSize="19dp"
+        android:textColor="#FFF"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/buttonshape2_j"
+        android:layout_below="@+id/price_val_8"
+        android:layout_toRightOf="@+id/price_val_8"
+        android:layout_toEndOf="@+id/price_val_8" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:id="@+id/edit_btn"
+        android:text="edit"
+        android:textSize="19dp"
+        android:textColor="#FFF"
+        android:background="@drawable/buttonshape2_j"
+        android:layout_below="@+id/price_8"
+        android:layout_alignLeft="@+id/picbag_8"
+        android:layout_alignStart="@+id/picbag_8" />
+
+</RelativeLayout>

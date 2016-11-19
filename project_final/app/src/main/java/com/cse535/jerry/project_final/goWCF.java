@@ -10,10 +10,15 @@ import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.MarshalBase64;
 import org.ksoap2.serialization.MarshalFloat;
 import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import static java.lang.String.valueOf;
 
 
 public class goWCF {
@@ -48,12 +53,12 @@ public class goWCF {
             // 调用WebService
             transport.call(soapAction, envelope);
             if (envelope.getResponse() != null) {
-                result = Boolean.valueOf(String.valueOf(envelope.getResponse()));
+                result = Boolean.valueOf(valueOf(envelope.getResponse()));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.i("result", String.valueOf(result));
+        Log.i("result", valueOf(result));
         return result;
     }
 
@@ -89,9 +94,9 @@ public class goWCF {
             if (envelope.getResponse() != null) {
                 System.out.println(envelope.getResponse());
                 SoapObject response = (SoapObject) envelope.getResponse();
-                Log.i("result", String.valueOf(envelope.getResponse()));
-                String resOflogin = String.valueOf( response.getProperty("LoginSuc") );
-                Log.i("RES", resOflogin);
+//                Log.i("result", valueOf(envelope.getResponse()));
+                String resOflogin = valueOf( response.getProperty("LoginSuc") );
+//                Log.i("RES", resOflogin);
 //                res = new JSONObject(new String(buffer));
                 result = Boolean.valueOf(resOflogin);
             }
@@ -113,12 +118,27 @@ public class goWCF {
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        rpc.addProperty("name", account);
-        rpc.addProperty("pic", pic);
-//        price = 10.5f;
-        rpc.addProperty("price", (Float)price);
-        rpc.addProperty("description",description);
-        rpc.addProperty("location",location);
+        Log.i("info",methodName+"____"+account+"___"+title+"___"+ valueOf(price)+"___"+description+"___"+location);
+        Log.i("propertyCount pervious", valueOf(rpc.getPropertyCount()) );
+        if( account != null){
+            rpc.addProperty("name", account);
+        }
+        if(pic != null){
+            rpc.addProperty("pic", pic);
+        }
+        if( title != null){
+            rpc.addProperty("title", title);
+        }
+        if(price != 0){
+            rpc.addProperty("price", price);
+        }
+        if(description != null){
+            rpc.addProperty("description",description);
+        }
+        if(location != null){
+            rpc.addProperty("location",location);
+        }
+        Log.i("propertyCount after", valueOf(rpc.getPropertyCount()) );
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = rpc;
@@ -136,12 +156,162 @@ public class goWCF {
             transport.call(soapAction, envelope);
             if (envelope.getResponse() != null) {
                 System.out.println(envelope.getResponse());
+//                Log.i("result","test test test");
+            }else{
                 res = true;
+                Log.i("result", "fall here?");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return res;
+    }
+
+    public static List<Bag> bagList( String location ){
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "request_baglist";
+        // EndPoint
+        String endPoint = "http://40.77.101.210/OrderService.svc";
+        // SOAP Action
+        String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
+        rpc.addProperty("location",location);
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        (new MarshalBase64()).register(envelope);
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+        HttpTransportSE transport = new HttpTransportSE(endPoint);
+        transport.debug = true;
+        List<Bag> bags = new ArrayList<Bag>();
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+            if (envelope.getResponse() != null) {
+                System.out.println(envelope.getResponse());
+                SoapObject response = (SoapObject) envelope.getResponse();
+//                Log.i("result", String.valueOf(((SoapObject) envelope.getResponse()).getPropertyCount()));
+//                Log.i("result11", String.valueOf((((SoapObject) envelope.getResponse()).getProperty(0))));
+                for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
+                    Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
+//                    Log.i("result data", valueOf(data));
+//                    ObjectInputStream obj = new ObjectInputStream(data);
+                    SoapObject s= (SoapObject)data;
+//                    Log.i("result sss", valueOf(s));
+                    Bag bag = transfer(s);
+                    Log.i("name", bag.getAccount());
+                    Log.i("id", ((Integer)bag.getBagid()).toString());
+                    Log.i("price",((Float)bag.getPrice()).toString());
+//        Log.i("location",);
+                    Log.i("descript", bag.getDescription());
+                    bags.add(transfer(s));
+                }
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bags;
+    }
+
+    public static Bag transfer(SoapObject data){
+        String name = valueOf( data.getProperty("Account") );
+        Integer BagID = Integer.valueOf( (String) (((SoapPrimitive)data.getProperty("BadID")).getValue()) );
+        byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
+        String title = valueOf( data.getProperty("Title"));
+        Float price = Float.valueOf( (String) (((SoapPrimitive)data.getProperty("Price")).getValue()) );
+        if( price<1 ){
+            price = random_price();
+        }
+        Integer location_count = ((SoapObject)data.getProperty("Location")).getPropertyCount();
+        Integer descript_count = ((SoapObject)data.getProperty("Description")).getPropertyCount();
+        String local = "Tempe,85281";
+        if (location_count > 0)
+            local = valueOf( ((SoapObject)data.getProperty("Location")).getProperty(0) );
+        String description = " That is a really good bag. ";
+        if (descript_count > 0)
+            description = valueOf( ((SoapObject)data.getProperty("Description")).getProperty(0) );
+        Bag bag = new Bag(BagID, title, description, name, pic, price);
+//        Log.i("name", bag.getAccount());
+//        Log.i("id", ((Integer)bag.getBagid()).toString());
+//        Log.i("price",((Float)bag.getPrice()).toString());
+////        Log.i("location",);
+//        Log.i("descript", bag.getDescription());
+        return bag;
+    }
+
+    public static float random_price(){
+        double max = 120.0;
+        double min = 10.0;
+        Random random = new Random();
+        double range = max - min;
+        double scaled = random.nextDouble() * range;
+        double shifted = scaled + min;
+        return (float) shifted; // == (rand.nextDouble() * (max-min)) + min;
+    }
+
+    public static List<Review> reviewList(SoapObject datalist, int n){
+        List<Review> res = null;
+        for(int i=0 ; i<n ; i++){
+            SoapObject data = (SoapObject)datalist.getProperty(i);
+            String buyer = (String)data.getProperty("buyername");
+            String description = (String)data.getProperty("description");
+            Review re = new Review(buyer, description);
+            res.add(re);
+        }
+        return res;
+    }
+
+    public static List<Bag> mybag( String name ){
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "request_my_bags";
+        // EndPoint
+        String endPoint = "http://40.77.101.210/OrderService.svc";
+        // SOAP Action
+        String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
+        rpc.addProperty("name",name);
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        (new MarshalBase64()).register(envelope);
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+        HttpTransportSE transport = new HttpTransportSE(endPoint);
+        transport.debug = true;
+        List<Bag> result = null;
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+            if (envelope.getResponse() != null) {
+                System.out.println(envelope.getResponse());
+                SoapObject response = (SoapObject) envelope.getResponse();
+//                Log.i("result", String.valueOf(((SoapObject) envelope.getResponse()).getPropertyCount()));
+//                Log.i("result11", String.valueOf((((SoapObject) envelope.getResponse()).getAttribute(0))));
+                for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
+                    Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
+                    Log.i("result data", valueOf(data));
+//                    ObjectInputStream obj = new ObjectInputStream(data);
+                    System.out.println(data);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 //  

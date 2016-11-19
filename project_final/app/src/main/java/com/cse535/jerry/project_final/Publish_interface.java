@@ -3,6 +3,7 @@ package com.cse535.jerry.project_final;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -58,10 +59,17 @@ public class Publish_interface extends AppCompatActivity {
         }
         if (Interface_switch == 0) {
             RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
-            base.setBackgroundColor(R.color.Beige_J);
+            Toast.makeText(this,"bag", Toast.LENGTH_SHORT).show();
+            base.setBackgroundColor(Color.parseColor("#ffe48d"));
         } else if (Interface_switch == 2){
             RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
-            base.setBackgroundColor(R.color.Beige_J);
+            Toast.makeText(this,"edit", Toast.LENGTH_SHORT).show();
+            base.setBackgroundColor(Color.parseColor("#2df9ae"));
+//            base.setBackgroundColor(R.color.BlueGreen_J);
+        }else{
+            RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
+            Toast.makeText(this,"request", Toast.LENGTH_SHORT).show();
+            base.setBackgroundColor(Color.parseColor("#399ef5"));
         }
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -179,6 +187,7 @@ public class Publish_interface extends AppCompatActivity {
                 method = "publish_bag";
             }else{
                 method = "publish_req";
+//                method = "ReqInfo";
             }
             res = goWCF.publish(method, name, pic, title, price, description, location);
             return null;
@@ -186,12 +195,12 @@ public class Publish_interface extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Integer result){
-//            if( res == true){
-//                Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
-//            }else{
-//                Toast.makeText(Publish_interface.this, "publish fail", Toast.LENGTH_LONG).show();
-//            }
+            if( res == true){
                 Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(Publish_interface.this, "publish fail", Toast.LENGTH_LONG).show();
+            }
+//                Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
 
         }
     }

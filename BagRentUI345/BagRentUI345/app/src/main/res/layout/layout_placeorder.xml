@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/iv_bag_4"
+        android:layout_width="300px"
+        android:layout_height="300px"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:layout_below="@id/iv_bag_4"
+        android:id="@+id/tv_title_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_title_4"
+        android:id="@+id/rg_location_4">
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tempe"
+            android:text="Tempe"/>
+        <RadioButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/phoenix"
+            android:text="Phoenix"/>
+    </RadioGroup>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rg_location_4"
+        android:id="@+id/ll_choosetime"
+        android:layout_centerHorizontal="true">
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Date"
+            android:id="@+id/btn_choosedate"
+            android:onClick="chooseDate" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Time"
+            android:id="@+id/btn_choosetime"
+            android:onClick="chooseTime"/>
+    </LinearLayout>
+
+
+
+    <Button
+        android:layout_below="@id/ll_choosetime"
+        android:id="@+id/btn_submit_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:onClick="placeOrder"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>

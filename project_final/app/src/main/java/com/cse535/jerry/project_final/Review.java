@@ -4,7 +4,7 @@ package com.cse535.jerry.project_final;
  * Created by Yanzhu on 2016/11/13.
  */
 
-public class Review {
+public class Review implements java.io.Serializable {
     public String buyerName;
     public String description;
 

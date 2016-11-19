@@ -176,9 +176,9 @@ public class GPSTracker extends Service implements LocationListener {
         return longitude;
     }
 
-    public String getAddress(){
+    public String[] getAddress(){
         Geocoder geocoder = new Geocoder(mContext, Locale.getDefault());
-        String result = null;
+        String[] result = null;
         try {
             List<Address> addressList = geocoder.getFromLocation(
                     latitude, longitude, 1);
@@ -187,7 +187,16 @@ public class GPSTracker extends Service implements LocationListener {
                 StringBuilder sb = new StringBuilder();
                 sb.append(address.getLocality()).append(",");
                 sb.append(address.getPostalCode());
-                result = sb.toString();
+
+                StringBuilder sb2 = new StringBuilder();
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                    sb2.append(address.getAddressLine(i)).append("\n");
+                }
+                sb2.append(address.getLocality()).append("\n");
+                sb2.append(address.getPostalCode()).append("\n");
+                sb2.append(address.getCountryName());
+
+                result = new String[]{sb.toString(), sb2.toString()};
             }
         } catch (IOException e) {
             Log.e(TAG, "Unable connect to Geocoder", e);

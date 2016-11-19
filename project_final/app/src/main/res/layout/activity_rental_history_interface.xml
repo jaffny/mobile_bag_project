@@ -11,19 +11,14 @@
     tools:context="com.cse535.jerry.project_final.rental_history_interface">
 
     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollbars="none"
-        android:layout_weight="1">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none">
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/table_lay_7"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:scrollIndicators="none|top|bottom">
+            android:id="@+id/table_lay_7">
         </TableLayout>
     </ScrollView>
 

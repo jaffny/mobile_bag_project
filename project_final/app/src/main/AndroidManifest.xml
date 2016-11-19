@@ -39,6 +39,19 @@
             android:name="com.gun0912.tedpicker.ImagePickerActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".photoTaken" />
+        <activity android:name=".MainListActivity"
+            android:launchMode="singleTask">
+        </activity>
+        <activity android:name=".ChangeThemeActivity">
+        </activity>
+        <activity android:name=".BagInfoActivity">
+        </activity>
+        <activity android:name=".PlaceOrderActivity">
+        </activity>
+        <activity android:name=".ChooseDateActivity">
+        </activity>
+        <activity android:name=".ChooseTimeActivity"></activity>
+        <activity android:name=".OrderSuccessActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -54,7 +67,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Edit_interface"></activity>
+        <activity android:name=".Edit_interface" />
+        <activity android:name=".review_bag"></activity>
     </application>
 
 </manifest>

@@ -11,7 +11,7 @@ import java.util.List;
  * Created by Yanzhu on 2016/11/13.
  */
 
-public class Bag {
+public class  Bag implements java.io.Serializable {
     public int bagid;
     public String title;
     public String description;
@@ -21,7 +21,7 @@ public class Bag {
     public float price;
     public List< Review> lReview;
 
-    public Bag(int bagid, String title, String description, String account, byte[] byteArray, float price, List< Review> lReview) {
+    public Bag(int bagid, String title, String description, String account, byte[] byteArray, float price) {
         this.bagid = bagid;
         this.title = title;
         this.description = description;
@@ -51,6 +51,8 @@ public class Bag {
         return bitmap;
     }
 
+    public byte[] getByteArray() {return byteArray;}
+
     public float getPrice() {
         return price;
     }
@@ -79,6 +81,8 @@ public class Bag {
         this.bitmap = bitmap;
     }
 
+    public void setByteArray(byte[] byteArray) {this.byteArray = byteArray;}
+
     public void setPrice(float price) {
         this.price = price;
     }
@@ -96,4 +100,5 @@ public class Bag {
     public void bytes2bitmap(byte[] byteArray){
         this.bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
+
 }

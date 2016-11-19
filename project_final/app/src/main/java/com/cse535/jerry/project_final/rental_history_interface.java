@@ -1,9 +1,11 @@
 package com.cse535.jerry.project_final;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,13 +18,13 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class rental_history_interface extends AppCompatActivity {
@@ -34,23 +36,109 @@ public class rental_history_interface extends AppCompatActivity {
     private GoogleApiClient client;
     private int REQUEST_CODE_CAPTURE = 1;
     public  ImageView imgView;
+    public int Interface_switch = 0;
+    public String name;
+    public List<Bag> bags = new ArrayList<Bag>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rental_history_interface);
+        getUserInfo();
+        AsyncBagHist task = new AsyncBagHist();
+        task.execute();
         Drawable img = null;
         String title = "test";
         Calendar cur = Calendar.getInstance();
 //      temporarily
         Calendar lease = Calendar.getInstance();
         lease.add(Calendar.DAY_OF_MONTH, 2);
-        setRow(img, title, cur, lease);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            Interface_switch = extras.getInt("ListInterface");
+        }
+        if (Interface_switch == 1) {
+//            setRow_myBag(img, title, cur, lease);
+        } else if (Interface_switch == 0){
+//            setRow_myHist(img, title, cur, lease);
+            bags = (List<Bag>) extras.get("bags");
+            setInterface(bags);
+        }
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
-    public void setRow(Drawable img, String title, Calendar cur, Calendar lease) {
+
+    protected void getUserInfo(){
+        SharedPreferences user = getSharedPreferences("user", 0);
+        name = user.getString("name", "AccountName");
+    }
+
+    public void setInterface(List<Bag> bags){
+        int i = 0;
+        for( Bag bag : bags ){
+//      temporarily
+            Calendar cur = Calendar.getInstance();
+            Calendar lease = Calendar.getInstance();
+            lease.add(Calendar.DAY_OF_MONTH, 2);
+            System.out.println("####################################");
+            System.out.println(bag.getByteArray());
+            bag.bytes2bitmap(bag.getByteArray());
+            System.out.println(bag.getBitmap());
+            System.out.println("####################################");
+            setRow_myHist(i, bag.getBitmap(), bag.getTitle(), cur, lease);
+            i++;
+        }
+    }
+
+    public void setRow_myHist(int i, Bitmap img, String title, Calendar cur, Calendar lease) {
         //Inflater service
 //        testing
+        int[] imgID = {
+                R.drawable.bag0,
+                R.drawable.bag1,
+                R.drawable.bag2,
+                R.drawable.bag3,
+                R.drawable.bag4,
+        };
+//        for(int i=0; i< 5; i++){
+            LayoutInflater layoutInfralte=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            TableLayout tableLayout = (TableLayout) findViewById(R.id.table_lay_7);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow row = new TableRow(this);
+            row.setLayoutParams(params);
+
+            View view;
+            view = layoutInfralte.inflate(R.layout.content_row_rental_history, null);
+
+            TextView Title = (TextView)view.findViewById(R.id.title_name);
+            //Testing use
+//            String bag = "my bag" + Integer.toString(i);
+//            imgView.setImageResource(imgID[i]);
+            ImageView imgView = (ImageView)view.findViewById(R.id.picbag_7);
+            imgView.setImageBitmap(img);
+            Title.setText(title);
+            TextView LeaseTime = (TextView)view.findViewById(R.id.lease_time);
+            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+            cur.add(Calendar.DAY_OF_MONTH,2);
+            String str = df.format(cur.getTime());
+            LeaseTime.setText(str);
+            Button leaseBtn = (Button)view.findViewById(R.id.lease_btn);
+            setLeaseClickEvent(leaseBtn, cur, LeaseTime);
+            Button reviewBtn = (Button)view.findViewById(R.id.review_btn);
+            setReviewClickEvent(reviewBtn);
+            row.addView(view);
+            tableLayout.addView(row);
+//            RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.rowLayout);
+            if(i%2 == 0){
+                row.setBackgroundColor(Color.parseColor("#58ACFA"));
+            }else{
+                row.setBackgroundColor(Color.parseColor("#81F7F3"));
+            }
+//        }
+
+    }
+
+    public void setRow_myBag(byte[] img, String title, Calendar cur, Calendar lease){
+        //        testing
         int[] imgID = {
                 R.drawable.bag0,
                 R.drawable.bag1,
@@ -61,42 +149,62 @@ public class rental_history_interface extends AppCompatActivity {
         for(int i=0; i< 5; i++){
             LayoutInflater layoutInfralte=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TableLayout tableLayout = (TableLayout) findViewById(R.id.table_lay_7);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
             TableRow row = new TableRow(this);
+            row.setLayoutParams(params);
+
             View view;
-            view = layoutInfralte.inflate(R.layout.content_row_rental_history, null);
-            TextView Title = (TextView)view.findViewById(R.id.title_name);
+            view = layoutInfralte.inflate(R.layout.content_row_my_bag, null);
+
+            TextView Title = (TextView)view.findViewById(R.id.title_name_8);
             String bag = "my bag" + Integer.toString(i);
-            ImageView imgView = (ImageView)view.findViewById(R.id.picbag_7);
+            ImageView imgView = (ImageView)view.findViewById(R.id.picbag_8);
             imgView.setImageResource(imgID[i]);
             Title.setText(bag);
-            TextView LeaseTime = (TextView)view.findViewById(R.id.lease_time);
-            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-            cur.add(Calendar.DAY_OF_MONTH,2);
-            String str = df.format(cur.getTime());
-            LeaseTime.setText(str);
-            Button leaseBtn = (Button)view.findViewById(R.id.lease_btn);
-            setLeaseClickEvent(leaseBtn, cur, LeaseTime);
+            TextView price = (TextView)view.findViewById(R.id.price_val_8);
+            Button editBtn = (Button)view.findViewById(R.id.edit_btn);
+            setEditClickEvent(editBtn);
+            Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
+            setDeleteClickEvent(deleteBtn);
             row.addView(view);
             tableLayout.addView(row);
 //            RelativeLayout relativeLayout = (RelativeLayout)findViewById(R.id.rowLayout);
             if(i%2 == 0){
-                row.setBackgroundColor(Color.parseColor("#58ACFA"));
+                row.setBackgroundColor(Color.parseColor("#FFE7A728"));
             }else{
-                row.setBackgroundColor(Color.parseColor("#81F7F3"));
+                row.setBackgroundColor(Color.parseColor("#efdd1e"));
             }
         }
-
+    }
+    public void setEditClickEvent(Button edit){
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(rental_history_interface.this, Publish_interface.class);
+                intent.putExtra("PubInterface", 2);
+                startActivity(intent);
+            }
+        });
     }
 
-//    public void setPicClickEvent(View row){
-//        imgView = (ImageView)row.findViewById(R.id.picbag_7);
-//        imgView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                PhotoTaken();
-//            }
-//        });
-//    }
+    public void setDeleteClickEvent(Button delete){
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//               delete fuction aysncTask
+            }
+        });
+    }
+
+    public void setReviewClickEvent(Button review){
+        review.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(rental_history_interface.this, review_bag.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     public void setLeaseClickEvent(Button lease, final Calendar c, final TextView time){
         lease.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +220,13 @@ public class rental_history_interface extends AppCompatActivity {
     }
 
     private class AsyncBagHist extends AsyncTask<Void, Void, Void> {
-        Boolean res;
+//        Boolean res;
+        List<Bag> res ;
         @Override
         protected Void doInBackground(Void... params) {
             String method;
+
+//            res = goWCF.bagList( name );
 //            res = goWCF.publish(method, name, pic, title, price, description, location);
             return null;
         }
@@ -133,39 +244,4 @@ public class rental_history_interface extends AppCompatActivity {
 
     }
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    public Action getIndexApiAction() {
-        Thing object = new Thing.Builder()
-                .setName("rental_history_interface Page") // TODO: Define a title for the content shown.
-                // TODO: Make sure this auto-generated URL is correct.
-                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
-                .build();
-        return new Action.Builder(Action.TYPE_VIEW)
-                .setObject(object)
-                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
-                .build();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        client.connect();
-        AppIndex.AppIndexApi.start(client, getIndexApiAction());
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        AppIndex.AppIndexApi.end(client, getIndexApiAction());
-        client.disconnect();
-    }
 }

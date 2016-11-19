@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +15,7 @@ public class login_page extends AppCompatActivity {
     private String account;
     private String password;
     private String local;
+    private String long_local;
     private int choose = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,9 @@ public class login_page extends AppCompatActivity {
         TextView pwdView = (EditText)findViewById(R.id.pwd_1);
         account = accountView.getText().toString();
         password = pwdView.getText().toString();
-        local = curlocal();
+        String[] ads = curlocal();
+        local = ads[0];
+        long_local = ads[1];
     }
 
     public void registerEvent(View view){
@@ -63,16 +65,20 @@ public class login_page extends AppCompatActivity {
         SharedPreferences.Editor PE = user.edit();
         PE.putString("name",account);
         PE.putString("local", local);
+        PE.putBoolean("show_detail", true);
+        PE.putString("local_detail", long_local);
         PE.commit();
     }
 
-    private String curlocal(){
+    private String[] curlocal(){
         GPSTracker  gps = new GPSTracker(this);
-        String addr = null;
+        String[] addr = null;
         if(gps.canGetLocation()){
-//            double latitude = gps.getLatitude();
-//            double longitude = gps.getLongitude();
+            double latitude = gps.getLatitude();
+            double longitude = gps.getLongitude();
             addr = gps.getAddress();
+
+
 //            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude +"\nlocality:" + addr, Toast.LENGTH_LONG).show();
         }else{
             gps.showSettingsAlert();
@@ -103,7 +109,7 @@ public class login_page extends AppCompatActivity {
                 }
             }else{
                 if(res == true){
-                    Intent intent = new Intent(login_page.this, MyAcountActivity.class);
+                    Intent intent = new Intent(login_page.this, MainListActivity.class);
                     onPause();
                     startActivity(intent);
                 }else{
