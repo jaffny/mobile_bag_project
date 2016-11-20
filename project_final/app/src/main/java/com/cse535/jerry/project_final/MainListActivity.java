@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class MainListActivity extends Activity {
     BagList adapter1;
     BagList adapter2;
     String[] id1;
+    private String location;
 
 
     @Override
@@ -40,7 +42,7 @@ public class MainListActivity extends Activity {
         ThemeChangeUtil.changeTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_mainlist);
-
+        getUserInfo();
         context = this.getApplicationContext();
         dbo = new DBUtil(this);
         try{
@@ -64,6 +66,18 @@ public class MainListActivity extends Activity {
             }
         });
 
+    }
+
+    protected void getUserInfo(){
+        SharedPreferences user = getSharedPreferences("user", 0);
+        location = user.getString("local", "Tempe,85281");
+        Boolean show_detail = user.getBoolean("show", true);
+        if(show_detail == true){
+            SharedPreferences.Editor PE = user.edit();
+            PE.putBoolean("show_detail", false);
+            String adds_detail = user.getString("local_detail", " 699 S Mill Ave #108\n Tempe AZ 85281\n USA");
+            Toast.makeText(this,adds_detail, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void isearch(View view){

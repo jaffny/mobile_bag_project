@@ -4,6 +4,7 @@ package com.cse535.jerry.project_final;
  * Created by jerry on 2016/11/13.
  */
 
+import android.util.Base64;
 import android.util.Log;
 
 import org.ksoap2.SoapEnvelope;
@@ -197,8 +198,7 @@ public class goWCF {
             if (envelope.getResponse() != null) {
                 System.out.println(envelope.getResponse());
                 SoapObject response = (SoapObject) envelope.getResponse();
-//                Log.i("result", String.valueOf(((SoapObject) envelope.getResponse()).getPropertyCount()));
-//                Log.i("result11", String.valueOf((((SoapObject) envelope.getResponse()).getProperty(0))));
+//
                 for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
                     Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
 //                    Log.i("result data", valueOf(data));
@@ -221,9 +221,81 @@ public class goWCF {
         return bags;
     }
 
+
+    public static List<Bag> mybag( String name ){
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "request_my_bags";
+        // EndPoint
+        String endPoint = "http://40.77.101.210/OrderService.svc";
+        // SOAP Action
+        String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
+        rpc.addProperty("name",name);
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        (new MarshalBase64()).register(envelope);
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+        HttpTransportSE transport = new HttpTransportSE(endPoint);
+        transport.debug = true;
+        List<Bag> bags = new ArrayList<Bag>();
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+            if (envelope.getResponse() != null) {
+//                System.out.println(envelope.getResponse());
+                SoapObject response = (SoapObject) envelope.getResponse();
+                for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
+                    Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
+                    SoapObject s= (SoapObject)data;
+                    Bag bag = transfer(s);
+//                    System.out.println("#########activity_list_interface##############");
+//                    System.out.println(bag.getByteArray());
+//                    bag.bytes2bitmap(bag.getByteArray());
+//                    System.out.println(bag.getBitmap());
+//                    System.out.println("#########activity_list_interface##############");
+//                    Log.i("name", bag.getAccount());
+//                    Log.i("id", ((Integer)bag.getBagid()).toString());
+//                    Log.i("price",((Float)bag.getPrice()).toString());
+//                    Log.i("descript", bag.getDescription());
+                    bags.add(transfer(s));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bags;
+    }
+
+    public static List<Review> reviewList(SoapObject datalist, int n){
+        List<Review> res = null;
+        for(int i=0 ; i<n ; i++){
+            SoapObject data = (SoapObject)datalist.getProperty(i);
+            String buyer = (String)data.getProperty("buyername");
+            String description = (String)data.getProperty("description");
+            Review re = new Review(buyer, description);
+            res.add(re);
+        }
+        return res;
+    }
+
     public static Bag transfer(SoapObject data){
         String name = valueOf( data.getProperty("Account") );
         Integer BagID = Integer.valueOf( (String) (((SoapPrimitive)data.getProperty("BadID")).getValue()) );
+        System.out.println("#########transfer()1##############");
+        SoapPrimitive imgData = (SoapPrimitive) data.getProperty("Pic");
+        System.out.println(imgData.toString());
+        String imgStr = imgData.toString();
+        byte[] img = Base64.decode(imgData.toString(), Base64.CRLF);
+        System.out.println(img.toString());
+        System.out.println("#########transfer()2##############");
         byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
         String title = valueOf( data.getProperty("Title"));
         Float price = Float.valueOf( (String) (((SoapPrimitive)data.getProperty("Price")).getValue()) );
@@ -255,63 +327,6 @@ public class goWCF {
         double scaled = random.nextDouble() * range;
         double shifted = scaled + min;
         return (float) shifted; // == (rand.nextDouble() * (max-min)) + min;
-    }
-
-    public static List<Review> reviewList(SoapObject datalist, int n){
-        List<Review> res = null;
-        for(int i=0 ; i<n ; i++){
-            SoapObject data = (SoapObject)datalist.getProperty(i);
-            String buyer = (String)data.getProperty("buyername");
-            String description = (String)data.getProperty("description");
-            Review re = new Review(buyer, description);
-            res.add(re);
-        }
-        return res;
-    }
-
-    public static List<Bag> mybag( String name ){
-        // 命名空间
-        String nameSpace = "http://tempuri.org/";
-        // 调用的方法名称
-        String methodName = "request_my_bags";
-        // EndPoint
-        String endPoint = "http://40.77.101.210/OrderService.svc";
-        // SOAP Action
-        String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
-        // 指定WebService的命名空间和调用的方法名
-        SoapObject rpc = new SoapObject(nameSpace, methodName);
-        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        rpc.addProperty("name",name);
-        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
-        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
-        envelope.bodyOut = rpc;
-        // 设置是否调用的是dotNet开发的WebService
-        envelope.dotNet = true;
-        (new MarshalBase64()).register(envelope);
-        // 等价于envelope.bodyOut = rpc;
-        envelope.setOutputSoapObject(rpc);
-        HttpTransportSE transport = new HttpTransportSE(endPoint);
-        transport.debug = true;
-        List<Bag> result = null;
-        try {
-            // 调用WebService
-            transport.call(soapAction, envelope);
-            if (envelope.getResponse() != null) {
-                System.out.println(envelope.getResponse());
-                SoapObject response = (SoapObject) envelope.getResponse();
-//                Log.i("result", String.valueOf(((SoapObject) envelope.getResponse()).getPropertyCount()));
-//                Log.i("result11", String.valueOf((((SoapObject) envelope.getResponse()).getAttribute(0))));
-                for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
-                    Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
-                    Log.i("result data", valueOf(data));
-//                    ObjectInputStream obj = new ObjectInputStream(data);
-                    System.out.println(data);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return result;
     }
 
 //  

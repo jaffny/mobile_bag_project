@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cse535.jerry.project_final.rental_history_interface">
+    tools:context="com.cse535.jerry.project_final.list_interface">
 
     <ScrollView
         android:layout_width="match_parent"

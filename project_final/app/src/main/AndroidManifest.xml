@@ -30,7 +30,7 @@
         </activity>
         <activity android:name=".MyAcountActivity" />
         <activity android:name=".Publish_interface" />
-        <activity android:name=".rental_history_interface" />
+        <activity android:name=".list_interface" />
         <!--
  ATTENTION: This was auto-generated to add Google Play services to your project for
      App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.

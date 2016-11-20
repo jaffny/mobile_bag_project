@@ -86,6 +86,7 @@
                 android:id="@+id/register_btn_1" />
 
             <Button
+                android:onClick="loginEvent"
                 android:id="@+id/login_btn_1"
                 android:text="Login"
                 android:layout_height="wrap_content"

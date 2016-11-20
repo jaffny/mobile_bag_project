@@ -2,40 +2,66 @@ package com.cse535.jerry.project_final;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import static android.os.SystemClock.sleep;
+
 public class login_page extends AppCompatActivity {
+    private static final int REQUEST_CODE_ASK_PERMISSIONS = 1;
     private String account;
     private String password;
     private String local;
     private String long_local;
     private int choose = 0;
+    private String[] ads;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_page);
-        final Button loginBtn = (Button)findViewById(R.id.login_btn_1);
-        loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getCurLogin();
-                if(account.length() == 0 || password.length() == 0){
-                    Toast.makeText(login_page.this,"login Error", Toast.LENGTH_LONG ).show();
-                }else{
-                    choose = 0;
-                    AsyncLogin task = new AsyncLogin();
-                    task.execute();
-                }
+        requestGPSPermission();
+    }
 
+    public void requestGPSPermission(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION)) {
+                System.out.println("show the ShowRequestPermissionRationale");
+            } else {
+                System.out.println("request Permission");
+                ActivityCompat.requestPermissions( this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_ASK_PERMISSIONS);
             }
-        });
+        }else{
+            System.out.println("don't need request permission");
+            ads=curlocal();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_ASK_PERMISSIONS: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    ads = curlocal();
+                    while(ads == null){
+                        Log.i("addr",  "deny~~~~~~~~~~~~~~");
+                        sleep(1000);
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                }
+            }
+        }
     }
 
     private void getCurLogin(){
@@ -43,9 +69,37 @@ public class login_page extends AppCompatActivity {
         TextView pwdView = (EditText)findViewById(R.id.pwd_1);
         account = accountView.getText().toString();
         password = pwdView.getText().toString();
-        String[] ads = curlocal();
         local = ads[0];
         long_local = ads[1];
+    }
+
+    private String[] curlocal(){
+        GPSTracker  gps = new GPSTracker(login_page.this);
+        String[] addr = null;
+        if(gps.canGetLocation()){
+            try {
+//                double latitude = gps.getLatitude();
+//                double longitude = gps.getLongitude();
+//                Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude +"\nlocality:" + addr, Toast.LENGTH_LONG).show();
+                addr = gps.getAddress();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else{
+            gps.showSettingsAlert();
+        }
+        return addr;
+    }
+
+    public void loginEvent(View view){
+        getCurLogin();
+        if(account.length() == 0 || password.length() == 0){
+            Toast.makeText(login_page.this,"login Error", Toast.LENGTH_LONG ).show();
+        }else{
+            choose = 0;
+            AsyncLogin task = new AsyncLogin();
+            task.execute();
+        }
     }
 
     public void registerEvent(View view){
@@ -70,25 +124,10 @@ public class login_page extends AppCompatActivity {
         PE.commit();
     }
 
-    private String[] curlocal(){
-        GPSTracker  gps = new GPSTracker(this);
-        String[] addr = null;
-        if(gps.canGetLocation()){
-            double latitude = gps.getLatitude();
-            double longitude = gps.getLongitude();
-            addr = gps.getAddress();
 
-
-//            Toast.makeText(getApplicationContext(), "Your Location is - \nLat: " + latitude + "\nLong: " + longitude +"\nlocality:" + addr, Toast.LENGTH_LONG).show();
-        }else{
-            gps.showSettingsAlert();
-        }
-        return addr;
-    }
 
     private class AsyncLogin extends AsyncTask<String, Void, Integer>{
         Boolean res;
-
         @Override
         protected Integer doInBackground(String... params) {
             if(choose == 1){
@@ -117,7 +156,6 @@ public class login_page extends AppCompatActivity {
                 }
             }
         }
-
     }
 
 

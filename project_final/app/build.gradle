@@ -39,7 +39,7 @@ dependencies {
         maven { url 'https://oss.sonatype.org/content/repositories/ksoap2-android-releases/' }
     }
     compile 'com.sothree.slidinguppanel:library:3.3.1'
-    compile 'com.github.valuesfeng:androidpicturepicker:1.0.0'
+//    compile 'com.github.valuesfeng:androidpicturepicker:1.0.0'
     compile 'com.github.ParkSangGwon:TedPicker:v1.0.10'
     compile 'com.google.code.ksoap2-android:ksoap2-android:3.6.1'
 }
