@@ -58,7 +58,6 @@ public class list_interface extends AppCompatActivity {
         }
         bags = (List<Bag>) extras.get("bags");
         setInterface(bags);
-
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -101,13 +100,13 @@ public class list_interface extends AppCompatActivity {
 //        for(int i=0; i< 5; i++){
             LayoutInflater layoutInfralte=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TableLayout tableLayout = (TableLayout) findViewById(R.id.table_lay_7);
-            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
             TableRow row = new TableRow(this);
             row.setLayoutParams(params);
 
             View view;
             view = layoutInfralte.inflate(R.layout.content_row_rental_history, null);
-
+            view.setLayoutParams(params);
             TextView Title = (TextView)view.findViewById(R.id.title_name);
             //Testing use
 //            String bag = "my bag" + Integer.toString(i);
@@ -148,13 +147,13 @@ public class list_interface extends AppCompatActivity {
 //        for(int i=0; i< 5; i++){
             LayoutInflater layoutInfralte=(LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             TableLayout tableLayout = (TableLayout) findViewById(R.id.table_lay_7);
-            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT);
+            TableRow.LayoutParams params = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT, 1.0f);
             TableRow row = new TableRow(this);
             row.setLayoutParams(params);
 
             View view;
             view = layoutInfralte.inflate(R.layout.content_row_my_bag, null);
-
+            view.setLayoutParams(params);
             TextView Title = (TextView)view.findViewById(R.id.title_name_8);
             ImageView imgView = (ImageView)view.findViewById(R.id.picbag_8);
             imgView.setImageBitmap(bag.getBitmap());
@@ -165,13 +164,13 @@ public class list_interface extends AppCompatActivity {
             setEditClickEvent(editBtn);
             Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
             setDeleteClickEvent(deleteBtn);
-            row.addView(view);
-            tableLayout.addView(row);
-            if(i%2 == 0){
-                row.setBackgroundColor(Color.parseColor("#FFE7A728"));
-            }else{
-                row.setBackgroundColor(Color.parseColor("#efdd1e"));
-            }
+        row.addView(view);
+        tableLayout.addView(row);
+        if(i%2 == 0){
+            row.setBackgroundColor(Color.parseColor("#FFE7A728"));
+        }else{
+            row.setBackgroundColor(Color.parseColor("#efdd1e"));
+        }
 //        }
     }
     public void setEditClickEvent(Button edit){
