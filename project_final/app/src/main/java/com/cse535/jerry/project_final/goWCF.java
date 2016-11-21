@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.MarshalBase64;
+import org.ksoap2.serialization.MarshalFloat;
 import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
@@ -121,14 +122,7 @@ public class goWCF {
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
         Log.i("info",methodName+"____"+account+"___"+title+"___"+ valueOf(price)+"___"+description+"___"+location);
         Log.i("propertyCount pervious", valueOf(rpc.getPropertyCount()) );
-        PropertyInfo pi = new PropertyInfo();
-        if(price != 0){
-            pi.setName("price");
-            pi.setValue( String.valueOf(price) );
-            pi.setType(String.valueOf(price).getClass());
-            rpc.addProperty(pi);
-//            rpc.addProperty("price", price);
-        }
+        PropertyInfo pi;
         if(description != null){
             pi = new PropertyInfo();
             pi.setName("description");
@@ -153,6 +147,14 @@ public class goWCF {
             rpc.addProperty(pi);
 //            rpc.addProperty("name", account);
         }
+        if(price != 0){
+            pi = new PropertyInfo();
+            pi.setName("price");
+            pi.setValue( String.valueOf(price) );
+            pi.setType(String.valueOf(price).getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("price", price);
+        }
         if(pic != null){
             pi = new PropertyInfo();
             pi.setName("pic");
@@ -170,12 +172,15 @@ public class goWCF {
 //            rpc.addProperty("title", title);
         }
         Log.i("propertyCount after", valueOf(rpc.getPropertyCount()) );
+        Log.i("info",rpc.getProperty(0).toString()+"__"+rpc.getProperty(1).toString());
+        Log.i("info",rpc.getProperty(2).toString()+"__"+rpc.getProperty(3).toString());
+        Log.i("info",rpc.getProperty(4).toString()+"__"+rpc.getProperty(5).toString());
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = rpc;
         // 设置是否调用的是dotNet开发的WebService
         envelope.dotNet = true;
-//        (new MarshalFloat()).register(envelope);
+        (new MarshalFloat()).register(envelope);
         (new MarshalBase64()).register(envelope);
         // 等价于envelope.bodyOut = rpc;
         envelope.setOutputSoapObject(rpc);
