@@ -16,7 +16,6 @@ public class  Bag implements java.io.Serializable {
     public String title;
     public String description;
     public String account;
-    public Bitmap bitmap;
     public byte[] byteArray;
     public float price;
     public List< Review> lReview;
@@ -75,10 +74,6 @@ public class  Bag implements java.io.Serializable {
 
     public void setAccount(String account) {
         this.account = account;
-    }
-
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
     }
 
     public void setByteArray(byte[] byteArray) {this.byteArray = byteArray;}
