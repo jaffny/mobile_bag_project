@@ -9,7 +9,7 @@ import android.util.Log;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.MarshalBase64;
-import org.ksoap2.serialization.MarshalFloat;
+import org.ksoap2.serialization.PropertyInfo;
 import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
@@ -121,23 +121,53 @@ public class goWCF {
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
         Log.i("info",methodName+"____"+account+"___"+title+"___"+ valueOf(price)+"___"+description+"___"+location);
         Log.i("propertyCount pervious", valueOf(rpc.getPropertyCount()) );
-        if( account != null){
-            rpc.addProperty("name", account);
-        }
-        if(pic != null){
-            rpc.addProperty("pic", pic);
-        }
-        if( title != null){
-            rpc.addProperty("title", title);
-        }
+        PropertyInfo pi = new PropertyInfo();
         if(price != 0){
-            rpc.addProperty("price", price);
+            pi.setName("price");
+            pi.setValue( String.valueOf(price) );
+            pi.setType(String.valueOf(price).getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("price", price);
         }
         if(description != null){
-            rpc.addProperty("description",description);
+            pi = new PropertyInfo();
+            pi.setName("description");
+            pi.setValue(description);
+            pi.setType(description.getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("description",description);
         }
         if(location != null){
-            rpc.addProperty("location",location);
+            pi = new PropertyInfo();
+            pi.setName("location");
+            pi.setValue(location);
+            pi.setType(location.getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("location",location);
+        }
+        if( account != null){
+            pi = new PropertyInfo();
+            pi.setName("name");
+            pi.setValue(account);
+            pi.setType(account.getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("name", account);
+        }
+        if(pic != null){
+            pi = new PropertyInfo();
+            pi.setName("pic");
+            pi.setValue(pic);
+            pi.setType(pic.getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("pic", pic);
+        }
+        if( title != null){
+            pi = new PropertyInfo();
+            pi.setName("title");
+            pi.setValue(title);
+            pi.setType(title.getClass());
+            rpc.addProperty(pi);
+//            rpc.addProperty("title", title);
         }
         Log.i("propertyCount after", valueOf(rpc.getPropertyCount()) );
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
@@ -145,7 +175,7 @@ public class goWCF {
         envelope.bodyOut = rpc;
         // 设置是否调用的是dotNet开发的WebService
         envelope.dotNet = true;
-        (new MarshalFloat()).register(envelope);
+//        (new MarshalFloat()).register(envelope);
         (new MarshalBase64()).register(envelope);
         // 等价于envelope.bodyOut = rpc;
         envelope.setOutputSoapObject(rpc);
@@ -231,6 +261,9 @@ public class goWCF {
         String endPoint = "http://40.77.101.210/OrderService.svc";
         // SOAP Action
         String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
+        System.out.println("#######################");
+        System.out.println("###############"+name+"############");
+        System.out.println("#######################");
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
@@ -293,7 +326,7 @@ public class goWCF {
         SoapPrimitive imgData = (SoapPrimitive) data.getProperty("Pic");
         System.out.println(imgData.toString());
         String imgStr = imgData.toString();
-        byte[] img = Base64.decode(imgData.toString(), Base64.CRLF);
+        byte[] img = Base64.decode(imgData.toString(), Base64.DEFAULT);
         System.out.println(img.toString());
         System.out.println("#########transfer()2##############");
         byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
