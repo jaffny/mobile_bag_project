@@ -132,9 +132,6 @@ public class Publish_interface extends AppCompatActivity {
                     System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
                     System.out.println(pic.length);
                     System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-
-
-
                     view.setImageBitmap(bit);
 //                    InputStream iStream = getContentResolver().openInputStream(imgUri);
 //                    pic = getBytes(iStream);

@@ -17,18 +17,15 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static android.util.Base64.DEFAULT;
 import static java.lang.String.valueOf;
 
 
@@ -165,37 +162,23 @@ public class goWCF {
 //            rpc.addProperty("price", price);
         }
         if(pic != null){
-            pi = new PropertyInfo();
-            pi.setName("pic");
+            String pic_string = Base64.encodeToString(pic, Base64.DEFAULT);
+//            pi = new PropertyInfo();
+//            pi.setName("pic");
+//            pi.setValue(pic_string);
+//            pi.setType(pic_string.getClass());
+//            rpc.addProperty(pi);
+//
+//            rpc.addProperty(pi);
+            rpc.addProperty("pic",pic_string);
+            String test_img = (String)rpc.getProperty(4);
+            byte[] data = Base64.decode(test_img, Base64.DEFAULT);
 
-            Object obj = null;
-            ByteArrayInputStream bis = null;
-            ObjectInputStream ois = null;
-            try {
-                bis = new ByteArrayInputStream(pic);
-                ois = new ObjectInputStream(bis);
-                obj = ois.readObject();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } finally {
-                if (bis != null) {
-                    bis.close();
-                }
-                if (ois != null) {
-                    ois.close();
-                }
-            }
-
-            pi.setValue(obj);
-            pi.setType(byte[].class);
-            rpc.addProperty(pi);
-           // rpc.addProperty("pic",pic);
-            Object img = rpc.getProperty(4);
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            ObjectOutputStream os = new ObjectOutputStream(out);
-            os.writeObject(img);
-            byte[]  image =  out.toByteArray();
-
+//            ByteArrayOutputStream out = new ByteArrayOutputStream();
+//            ObjectOutputStream os = new ObjectOutputStream(out);
+//            os.writeObject(img);
+//            byte[]  image =  out.toByteArray();
+//
             String root = Environment.getExternalStorageDirectory().toString();
             File myDir = new File(root + "/folder");
             myDir.mkdirs();
@@ -205,7 +188,7 @@ public class goWCF {
                 file.delete();
             }
             FileOutputStream fos = new FileOutputStream(file);
-            fos.write(pic);
+            fos.write(data);
             fos.close();
 
 //            Log.i("hah","!-----------------------------compare byte array  "  + Arrays.equals(pic,image));
@@ -232,6 +215,7 @@ public class goWCF {
         (new MarshalBase64()).register(envelope);
         // 等价于envelope.bodyOut = rpc;
         envelope.setOutputSoapObject(rpc);
+//        envelope.implicitTypes=true;
         HttpTransportSE transport = new HttpTransportSE(endPoint);
         transport.debug = true;
         boolean res = false;
@@ -431,7 +415,7 @@ public class goWCF {
         SoapPrimitive imgData = (SoapPrimitive) data.getProperty("Pic");
         System.out.println(imgData.toString());
         String imgStr = imgData.toString();
-        byte[] img = Base64.decode(imgData.toString(), Base64.DEFAULT);
+        byte[] img = Base64.decode(imgData.toString(), DEFAULT);
         System.out.println(img.toString());
         System.out.println("#########transfer()2##############");
 //        byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
