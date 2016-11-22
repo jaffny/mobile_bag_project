@@ -96,9 +96,12 @@ public class login_page extends AppCompatActivity {
         if(account.length() == 0 || password.length() == 0){
             Toast.makeText(login_page.this,"login Error", Toast.LENGTH_LONG ).show();
         }else{
-            choose = 0;
-            AsyncLogin task = new AsyncLogin();
-            task.execute();
+            Intent intent = new Intent(login_page.this, MainListActivity.class);
+            onPause();
+            startActivity(intent);
+//            choose = 0;
+//            AsyncLogin task = new AsyncLogin();
+//            task.execute();
         }
     }
 

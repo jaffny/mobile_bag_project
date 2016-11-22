@@ -18,12 +18,13 @@ public class MyAcountActivity extends AppCompatActivity {
     String location;
     List<Bag> bags = new ArrayList<Bag>();
     List<Bag> mybags = new ArrayList<Bag>();
+    private AsyncMyAccount task;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_acount);
         getUserInfo();
-        AsyncMyAccount task = new AsyncMyAccount();
+        task = new AsyncMyAccount();
         task.execute();
         Button publishBag = (Button) findViewById(R.id.pub_bag);
         Button publishReq = (Button) findViewById(R.id.pub_req);
@@ -51,7 +52,7 @@ public class MyAcountActivity extends AppCompatActivity {
         rentalHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyAcountActivity.this, list_interface.class);
+                Intent intent = new Intent(MyAcountActivity.this, MainListActivity.class);
                 intent.putExtra("ListInterface",0);
                 intent.putExtra("bags", (Serializable) bags);
                 startActivity(intent);
@@ -69,7 +70,15 @@ public class MyAcountActivity extends AppCompatActivity {
         });
     }
 
-//    get session user info
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if(task.isCancelled()){
+//            task.cancel(true);
+//        }
+//    }
+
+    //    get session user info
     protected void getUserInfo(){
         SharedPreferences user = getSharedPreferences("user", 0);
         name = user.getString("name", "AccountName");

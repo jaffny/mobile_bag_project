@@ -76,7 +76,7 @@ public class list_interface extends AppCompatActivity {
             System.out.println("#########activity_list_interface##############");
             System.out.println(bag.getByteArray());
             bag.bytes2bitmap(bag.getByteArray());
-            System.out.println(bag.getBitmap());
+            System.out.println(bag.bytes2bitmap(bag.getByteArray()));
             System.out.println("#########activity_list_interface##############");
             if (Interface_switch == 1) {
                 setRow_myBag(i, bag,  cur, lease);
@@ -112,7 +112,7 @@ public class list_interface extends AppCompatActivity {
 //            String bag = "my bag" + Integer.toString(i);
 //            imgView.setImageResource(imgID[i]);
             ImageView imgView = (ImageView)view.findViewById(R.id.picbag_7);
-            imgView.setImageBitmap(bag.getBitmap());
+            imgView.setImageBitmap(bag.bytes2bitmap(bag.getByteArray()));
             Title.setText(bag.getTitle());
             TextView LeaseTime = (TextView)view.findViewById(R.id.lease_time);
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -156,12 +156,12 @@ public class list_interface extends AppCompatActivity {
             view.setLayoutParams(params);
             TextView Title = (TextView)view.findViewById(R.id.title_name_8);
             ImageView imgView = (ImageView)view.findViewById(R.id.picbag_8);
-            imgView.setImageBitmap(bag.getBitmap());
+            imgView.setImageBitmap(bag.bytes2bitmap(bag.getByteArray()));
             Title.setText(bag.getTitle());
             TextView Price = (TextView)view.findViewById(R.id.price_val_8);
             Price.setText(String.valueOf(bag.getPrice()));
             Button editBtn = (Button)view.findViewById(R.id.edit_btn);
-            setEditClickEvent(editBtn);
+            setEditClickEvent(i, editBtn, bag);
             Button deleteBtn = (Button)view.findViewById(R.id.delete_btn);
             setDeleteClickEvent(deleteBtn);
         row.addView(view);
@@ -173,12 +173,14 @@ public class list_interface extends AppCompatActivity {
         }
 //        }
     }
-    public void setEditClickEvent(Button edit){
+    public void setEditClickEvent(final int i, Button edit, final Bag bag){
         edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(list_interface.this, Publish_interface.class);
                 intent.putExtra("PubInterface", 2);
+                intent.putExtra("baglist_index", i);
+                intent.putExtra("bag", bag);
                 startActivity(intent);
             }
         });

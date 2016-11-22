@@ -3,6 +3,7 @@ package com.cse535.jerry.project_final;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -41,6 +42,9 @@ public class Publish_interface extends AppCompatActivity {
     public float price = 0;
     public String description="";
     public String location="";
+    public Bag bag;
+    public int bagID;
+    public int baglist_index;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -59,16 +63,18 @@ public class Publish_interface extends AppCompatActivity {
         }
         if (Interface_switch == 0) {
             RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
-            Toast.makeText(this,"bag", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Bag", Toast.LENGTH_SHORT).show();
             base.setBackgroundColor(Color.parseColor("#ffe48d"));
         } else if (Interface_switch == 2){
             RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
-            Toast.makeText(this,"edit", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Edit", Toast.LENGTH_SHORT).show();
             base.setBackgroundColor(Color.parseColor("#2df9ae"));
-//            base.setBackgroundColor(R.color.BlueGreen_J);
+            baglist_index = (int)extras.get("baglist_index");
+            bag = (Bag)extras.get("bag");
+            setEdit_Interface(bag);
         }else{
             RelativeLayout base = (RelativeLayout) findViewById(R.id.activity_publish_interface);
-            Toast.makeText(this,"request", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,"Request", Toast.LENGTH_SHORT).show();
             base.setBackgroundColor(Color.parseColor("#399ef5"));
         }
 
@@ -81,6 +87,21 @@ public class Publish_interface extends AppCompatActivity {
         location = user.getString("local", "Tempe,85281");
     }
 
+    public void setEdit_Interface(Bag bag){
+        ImageView Img = (ImageView)findViewById(R.id.image_6);
+        EditText Title = (EditText)findViewById(R.id.key_title);
+        EditText Price = (EditText)findViewById(R.id.key_price);
+        EditText Description = (EditText)findViewById(R.id.key_descript);
+        Img.setImageBitmap(bag.bytes2bitmap(bag.getByteArray()));
+        Title.setText(bag.getTitle());
+        Price.setText(String.valueOf(bag.getPrice()));
+        Description.setText(bag.getDescription());
+        bagID = bag.getBagid();
+        description = bag.getDescription();
+        title = bag.getTitle();
+        price = bag.getPrice();
+        pic = bag.getByteArray();
+    }
     public void PhotoTaken(View view) {
         Config config = new Config();
         config.setCameraHeight(R.dimen.camera_height);
@@ -104,9 +125,17 @@ public class Publish_interface extends AppCompatActivity {
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
                     Bitmap bmp = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imgUri);
                     bmp.compress(Bitmap.CompressFormat.JPEG, 1, bos);
-                    view.setImageBitmap(bmp);
+//                    view.setImageBitmap(bmp);
 //                    Log.i("img size", String.valueOf( bos.size() ));
                     pic = bos.toByteArray();
+                   Bitmap bit =  BitmapFactory.decodeByteArray(pic, 0, pic.length);
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+                    System.out.println(pic.length);
+                    System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+
+
+
+                    view.setImageBitmap(bit);
 //                    InputStream iStream = getContentResolver().openInputStream(imgUri);
 //                    pic = getBytes(iStream);
 //                    iStream.close();
@@ -134,8 +163,8 @@ public class Publish_interface extends AppCompatActivity {
         title = ((EditText)findViewById(R.id.key_title)).getText().toString();
         price = Float.valueOf( ((EditText)findViewById(R.id.key_price)).getText().toString() );
         description = ((EditText)findViewById(R.id.key_descript)).getText().toString();
-        if ( pic == null  || title.length() ==0 || price == 0 || description.length() ==0  ){
-            Toast.makeText(Publish_interface.this, "publish fail", Toast.LENGTH_LONG).show();
+        if ( pic == null || title.length() ==0 || price == 0 || description.length() ==0  ){
+            Toast.makeText(Publish_interface.this, "publish/edit fail", Toast.LENGTH_LONG).show();
         }else {
             AsyncPublish task = new AsyncPublish();
             task.execute();
@@ -189,16 +218,31 @@ public class Publish_interface extends AppCompatActivity {
                 method = "publish_req";
 //                method = "ReqInfo";
             }
-            res = goWCF.publish(method, name, pic, title, price, description, location);
+            try {
+                res = goWCF.publish(method, name, pic, title, price, description, location);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return null;
         }
 
         @Override
         protected void onPostExecute(Integer result){
             if( res == true){
-                Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
+                Toast.makeText(Publish_interface.this, "publish/edit success", Toast.LENGTH_LONG).show();
+                if(Interface_switch == 2){
+                    bag.setByteArray(pic);
+                    bag.setTitle(title);
+                    bag.setPrice(price);
+                    bag.setDescription(description);
+                    Intent intent = new Intent(Publish_interface.this, list_interface.class);
+                    intent.putExtra("ListInterface",1);
+                    intent.putExtra("bag", bag);
+                    intent.putExtra("baglist_index",baglist_index);
+                    startActivity(intent);
+                }
             }else{
-                Toast.makeText(Publish_interface.this, "publish fail", Toast.LENGTH_LONG).show();
+                Toast.makeText(Publish_interface.this, "publish/edit fail", Toast.LENGTH_LONG).show();
             }
 //                Toast.makeText(Publish_interface.this, "publish success", Toast.LENGTH_LONG).show();
 

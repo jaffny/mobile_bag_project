@@ -9,7 +9,7 @@
         android:id="@+id/activity_login_page"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="200dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:layout_alignParentTop="true"
@@ -20,8 +20,6 @@
         tools:context="com.cse535.jerry.project_final.login_page">
         <TableRow android:layout_width="match_parent"
             android:layout_height="match_parent"></TableRow>
-        <TableRow></TableRow>
-        <TableRow></TableRow>
         <TableRow>
             <TextView
                 android:text="Account:"
@@ -73,10 +71,22 @@
 
         <TableRow
             android:layout_marginLeft="80dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginRight="40dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+            <Button
+                android:onClick="loginEvent"
+                android:id="@+id/login_btn_1"
+                android:text="Login"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
+            </TableRow>
+        <TableRow
+            android:layout_marginLeft="80dp"
+            android:layout_marginRight="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
             <Button
                 android:onClick="registerEvent"
                 android:text="Register"
@@ -84,22 +94,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:id="@+id/register_btn_1" />
-
-            <Button
-                android:onClick="loginEvent"
-                android:id="@+id/login_btn_1"
-                android:text="Login"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight="1">
-
-
-            </Button>
         </TableRow>
-        <TableRow>
-
-        </TableRow>
-
 
     </TableLayout>
 </LinearLayout>

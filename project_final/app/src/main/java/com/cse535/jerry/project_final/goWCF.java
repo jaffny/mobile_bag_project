@@ -4,6 +4,7 @@ package com.cse535.jerry.project_final;
  * Created by jerry on 2016/11/13.
  */
 
+import android.os.Environment;
 import android.util.Base64;
 import android.util.Log;
 
@@ -16,6 +17,14 @@ import org.ksoap2.serialization.SoapPrimitive;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -108,7 +117,7 @@ public class goWCF {
         return result;
     }
 
-    public static boolean publish(String methodName, String account, byte[] pic, String title, float price, String description, String location){
+    public static boolean publish(String methodName, String account, byte[] pic, String title, float price, String description, String location) throws IOException {
         // 命名空间
         String nameSpace = "http://tempuri.org/";
         // 调用的方法名称
@@ -120,7 +129,7 @@ public class goWCF {
         // 指定WebService的命名空间和调用的方法名
         SoapObject rpc = new SoapObject(nameSpace, methodName);
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
-        Log.i("info",methodName+"____"+account+"___"+title+"___"+ valueOf(price)+"___"+description+"___"+location);
+        Log.i("info",methodName+"____"+account+"___"+title+"___"+ valueOf(price)+"___"+description+"___"+pic.toString());
         Log.i("propertyCount pervious", valueOf(rpc.getPropertyCount()) );
         PropertyInfo pi;
         if(description != null){
@@ -158,18 +167,57 @@ public class goWCF {
         if(pic != null){
             pi = new PropertyInfo();
             pi.setName("pic");
-            pi.setValue(pic);
-            pi.setType(pic.getClass());
+
+            Object obj = null;
+            ByteArrayInputStream bis = null;
+            ObjectInputStream ois = null;
+            try {
+                bis = new ByteArrayInputStream(pic);
+                ois = new ObjectInputStream(bis);
+                obj = ois.readObject();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } finally {
+                if (bis != null) {
+                    bis.close();
+                }
+                if (ois != null) {
+                    ois.close();
+                }
+            }
+
+            pi.setValue(obj);
+            pi.setType(byte[].class);
             rpc.addProperty(pi);
-//            rpc.addProperty("pic", pic);
+           // rpc.addProperty("pic",pic);
+            Object img = rpc.getProperty(4);
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            ObjectOutputStream os = new ObjectOutputStream(out);
+            os.writeObject(img);
+            byte[]  image =  out.toByteArray();
+
+            String root = Environment.getExternalStorageDirectory().toString();
+            File myDir = new File(root + "/folder");
+            myDir.mkdirs();
+            String fname = "image.jpg";
+            File file = new File (myDir, fname);
+            if (!file.exists()) {
+                file.delete();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(pic);
+            fos.close();
+
+//            Log.i("hah","!-----------------------------compare byte array  "  + Arrays.equals(pic,image));
+
         }
         if( title != null){
-            pi = new PropertyInfo();
-            pi.setName("title");
-            pi.setValue(title);
-            pi.setType(title.getClass());
-            rpc.addProperty(pi);
-//            rpc.addProperty("title", title);
+//            pi = new PropertyInfo();
+//            pi.setName("title");
+//            pi.setValue(title);
+//            pi.setType(title.getClass());
+//            rpc.addProperty(pi);
+            rpc.addProperty("title", title);
         }
         Log.i("propertyCount after", valueOf(rpc.getPropertyCount()) );
         Log.i("info",rpc.getProperty(0).toString()+"__"+rpc.getProperty(1).toString());
@@ -216,11 +264,15 @@ public class goWCF {
         SoapObject rpc = new SoapObject(nameSpace, methodName);
         // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
         rpc.addProperty("location",location);
+
         // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = rpc;
         // 设置是否调用的是dotNet开发的WebService
         envelope.dotNet = true;
+        System.out.println("#######################");
+        System.out.println("###############"+location+"############");
+        System.out.println("#######################");
         (new MarshalBase64()).register(envelope);
         // 等价于envelope.bodyOut = rpc;
         envelope.setOutputSoapObject(rpc);
@@ -231,7 +283,9 @@ public class goWCF {
             // 调用WebService
             transport.call(soapAction, envelope);
             if (envelope.getResponse() != null) {
+                System.out.println("###############requetst__baglist##################");
                 System.out.println(envelope.getResponse());
+                System.out.println("###############requetst__baglist##################");
                 SoapObject response = (SoapObject) envelope.getResponse();
 //
                 for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
@@ -288,7 +342,9 @@ public class goWCF {
             // 调用WebService
             transport.call(soapAction, envelope);
             if (envelope.getResponse() != null) {
-//                System.out.println(envelope.getResponse());
+                System.out.println("###############requetst__mybag##################");
+                System.out.println(envelope.getResponse());
+                System.out.println("###############requetst__mybag##################");
                 SoapObject response = (SoapObject) envelope.getResponse();
                 for(int i = 0; i<((SoapObject) envelope.getResponse()).getPropertyCount();i++){
                     Object data = ((SoapObject) envelope.getResponse()).getProperty(i);
@@ -310,6 +366,50 @@ public class goWCF {
             e.printStackTrace();
         }
         return bags;
+    }
+
+    public static void delete_bag(int BagID){
+        // 命名空间
+        String nameSpace = "http://tempuri.org/";
+        // 调用的方法名称
+        String methodName = "delete_bag";
+        // EndPoint
+        String endPoint = "http://40.77.101.210/OrderService.svc";
+        // SOAP Action
+        String soapAction = "http://tempuri.org/IOrderService/"+ methodName;
+        // 指定WebService的命名空间和调用的方法名
+        SoapObject rpc = new SoapObject(nameSpace, methodName);
+        // 设置需调用WebService接口需要传入的两个参数mobileCode、userId
+        System.out.print("the BagID number:"+ BagID);
+        rpc.addProperty("bag_id",BagID);
+        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.bodyOut = rpc;
+        // 设置是否调用的是dotNet开发的WebService
+        envelope.dotNet = true;
+        (new MarshalFloat()).register(envelope);
+        (new MarshalBase64()).register(envelope);
+        // 等价于envelope.bodyOut = rpc;
+        envelope.setOutputSoapObject(rpc);
+        HttpTransportSE transport = new HttpTransportSE(endPoint);
+        transport.debug = true;
+        try {
+            // 调用WebService
+            transport.call(soapAction, envelope);
+            if (envelope.getResponse() != null) {
+                System.out.print("################## delete event1 #####################");
+                System.out.println(envelope.getResponse());
+                System.out.print("delete finish");
+                System.out.print("################## delete event1 #####################");
+//                SoapObject response = (SoapObject) envelope.getResponse();
+            }else{
+                System.out.print("################## delete event2 #####################");
+                System.out.print("delete finish");
+                System.out.print("################## delete event2 #####################");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public static List<Review> reviewList(SoapObject datalist, int n){
@@ -334,26 +434,19 @@ public class goWCF {
         byte[] img = Base64.decode(imgData.toString(), Base64.DEFAULT);
         System.out.println(img.toString());
         System.out.println("#########transfer()2##############");
-        byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
+//        byte[] pic =   (((String) (((SoapPrimitive)data.getProperty("Pic")).getValue()) ).getBytes());
         String title = valueOf( data.getProperty("Title"));
         Float price = Float.valueOf( (String) (((SoapPrimitive)data.getProperty("Price")).getValue()) );
-        if( price<1 ){
+        if( price<1.0 ){
             price = random_price();
         }
-        Integer location_count = ((SoapObject)data.getProperty("Location")).getPropertyCount();
-        Integer descript_count = ((SoapObject)data.getProperty("Description")).getPropertyCount();
+//        Integer location_count = ((SoapObject)data.getProperty("Location")).getPropertyCount();
+//        Integer descript_count = ((SoapObject)data.getProperty("Description")).getPropertyCount();
         String local = "Tempe,85281";
-        if (location_count > 0)
-            local = valueOf( ((SoapObject)data.getProperty("Location")).getProperty(0) );
+        local = valueOf( data.getProperty("Location") );
         String description = " That is a really good bag. ";
-        if (descript_count > 0)
-            description = valueOf( ((SoapObject)data.getProperty("Description")).getProperty(0) );
-        Bag bag = new Bag(BagID, title, description, name, pic, price);
-//        Log.i("name", bag.getAccount());
-//        Log.i("id", ((Integer)bag.getBagid()).toString());
-//        Log.i("price",((Float)bag.getPrice()).toString());
-////        Log.i("location",);
-//        Log.i("descript", bag.getDescription());
+        description = valueOf( data.getProperty("Description") );
+        Bag bag = new Bag(BagID, title, description, name, img, price);
         return bag;
     }
 
@@ -364,7 +457,9 @@ public class goWCF {
         double range = max - min;
         double scaled = random.nextDouble() * range;
         double shifted = scaled + min;
-        return (float) shifted; // == (rand.nextDouble() * (max-min)) + min;
+        DecimalFormat format = new DecimalFormat("#.##");
+        String val = format.format(shifted);
+        return (float)Float.valueOf(val); // == (rand.nextDouble() * (max-min)) + min;
     }
 
 //  

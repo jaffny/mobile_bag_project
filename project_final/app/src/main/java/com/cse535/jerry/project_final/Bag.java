@@ -46,10 +46,6 @@ public class  Bag implements java.io.Serializable {
         return account;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
-
     public byte[] getByteArray() {return byteArray;}
 
     public float getPrice() {
@@ -92,8 +88,8 @@ public class  Bag implements java.io.Serializable {
         this.byteArray = stream.toByteArray();
     }
 
-    public void bytes2bitmap(byte[] byteArray){
-        this.bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+    public Bitmap bytes2bitmap(byte[] byteArray){
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
     }
 
 }
