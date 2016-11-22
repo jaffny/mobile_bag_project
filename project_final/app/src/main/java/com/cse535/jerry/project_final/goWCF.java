@@ -206,33 +206,31 @@ public class goWCF {
         Log.i("info",rpc.getProperty(0).toString()+"__"+rpc.getProperty(1).toString());
         Log.i("info",rpc.getProperty(2).toString()+"__"+rpc.getProperty(3).toString());
         Log.i("info",rpc.getProperty(4).toString()+"__"+rpc.getProperty(5).toString());
-        // 生成调用WebService方法的SOAP请求信息,并指定SOAP的版本
+
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.bodyOut = rpc;
         // 设置是否调用的是dotNet开发的WebService
         envelope.dotNet = true;
-        (new MarshalFloat()).register(envelope);
+        envelope.setAddAdornments(false);
+        envelope.implicitTypes = true;
         (new MarshalBase64()).register(envelope);
+        new MarshalFloat().register(envelope);
         // 等价于envelope.bodyOut = rpc;
         envelope.setOutputSoapObject(rpc);
-//        envelope.implicitTypes=true;
         HttpTransportSE transport = new HttpTransportSE(endPoint);
         transport.debug = true;
-        boolean res = false;
+        Boolean result = null;
         try {
             // 调用WebService
             transport.call(soapAction, envelope);
             if (envelope.getResponse() != null) {
-                System.out.println(envelope.getResponse());
-//                Log.i("result","test test test");
-            }else{
-                res = true;
-                Log.i("result", "fall here?");
-            }
+                result = Boolean.valueOf(valueOf(envelope.getResponse()));
+            }else
+                result=true;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return res;
+        return result;
     }
 
     public static List<Bag> bagList( String location ){
